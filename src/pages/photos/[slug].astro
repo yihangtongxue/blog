@@ -1,0 +1,108 @@
+---
+import { CollectionEntry, getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ImageLightbox from "../../components/ImageLightbox.astro";
+
+export async function getStaticPaths() {
+  const albums = await getCollection("photos");
+  return albums.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+interface Props {
+  entry: CollectionEntry<"photos">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description} sideBarActiveItemID="photos">
+  <div class="mb-5">
+    <h1 class="text-3xl font-bold">{entry.data.title}</h1>
+  </div>
+  <article class="prose prose-lg max-w-none prose-img:mx-auto" data-album-photos>
+    <div class="album-waterfall grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Content />
+    </div>
+  </article>
+
+  <ImageLightbox id="album-lightbox" navigation />
+</BaseLayout>
+
+<script>
+  function setupAlbumWaterfall() {
+    const grid = document.querySelector<HTMLElement>(".album-waterfall");
+    if (!grid || grid.dataset.masonryInitialized === "true") return;
+    grid.dataset.masonryInitialized = "true";
+
+    const items = [...grid.querySelectorAll<HTMLElement>("p")].filter((item) => item.querySelector("img"));
+    const rowHeight = 10;
+    const gap = 16;
+
+    const layout = () => {
+      items.forEach((item) => {
+        const span = Math.ceil((item.getBoundingClientRect().height + gap) / (rowHeight + gap));
+        item.style.gridRowEnd = `span ${span}`;
+      });
+    };
+
+    items.forEach((item) => {
+      const image = item.querySelector("img");
+      image?.addEventListener("load", layout);
+    });
+
+    new ResizeObserver(layout).observe(grid);
+    layout();
+  }
+
+  function setupAlbumLightbox() {
+    setupAlbumWaterfall();
+    const dialog = document.querySelector<HTMLDialogElement>("#album-lightbox");
+    const preview = dialog?.querySelector<HTMLImageElement>("[data-lightbox-preview]");
+    const previous = dialog?.querySelector<HTMLButtonElement>("[data-lightbox-previous]");
+    const next = dialog?.querySelector<HTMLButtonElement>("[data-lightbox-next]");
+    const photos = [...document.querySelectorAll<HTMLImageElement>("[data-album-photos] img")];
+    if (!dialog || !preview || dialog.dataset.albumLightboxInitialized === "true") return;
+    dialog.dataset.albumLightboxInitialized = "true";
+    let activeIndex = 0;
+
+    function showPhoto(index: number) {
+      if (!preview || photos.length === 0) return;
+      activeIndex = (index + photos.length) % photos.length;
+      preview.src = photos[activeIndex].currentSrc || photos[activeIndex].src;
+      preview.alt = photos[activeIndex].alt;
+    }
+
+    photos.forEach((photo, index) => {
+      photo.classList.add("cursor-zoom-in");
+      photo.addEventListener("click", () => {
+        showPhoto(index);
+        dialog?.showModal();
+      });
+    });
+
+    previous?.addEventListener("click", () => showPhoto(activeIndex - 1));
+    next?.addEventListener("click", () => showPhoto(activeIndex + 1));
+  }
+
+  setupAlbumLightbox();
+  document.addEventListener("astro:page-load", setupAlbumLightbox);
+</script>
+
+<style>
+  .album-waterfall :global(p) {
+    align-self: start;
+    margin: 0;
+  }
+
+  .album-waterfall {
+    grid-auto-rows: 10px;
+  }
+
+  .album-waterfall :global(img) {
+    display: block;
+    width: 100%;
+    margin: 0;
+  }
+
+</style>

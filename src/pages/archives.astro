@@ -1,0 +1,47 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import createSlug from "../lib/createSlug";
+
+const posts = (await getCollection("blog")).sort((first, second) => second.data.pubDate.valueOf() - first.data.pubDate.valueOf());
+const formatter = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "long" });
+const archives = new Map<string, typeof posts>();
+
+for (const post of posts) {
+  const key = `${post.data.pubDate.getFullYear()}-${post.data.pubDate.getMonth()}`;
+  const entries = archives.get(key) ?? [];
+  entries.push(post);
+  archives.set(key, entries);
+}
+---
+
+<BaseLayout title="归档" sideBarActiveItemID="archives">
+  <div class="mb-5">
+    <h1 class="text-3xl font-bold">归档</h1>
+  </div>
+
+  <div class="grid gap-8">
+    {
+      [...archives.values()].map((entries) => (
+        <section class="w-full rounded-lg bg-base-200 p-5">
+          <div class="mb-3 flex items-baseline justify-between gap-4">
+            <h2 class="text-xl font-bold">{formatter.format(entries[0].data.pubDate)}</h2>
+            <span class="text-sm opacity-60">{entries.length} 篇</span>
+          </div>
+          <ul class="divide-y divide-base-300">
+            {entries.map((post) => (
+              <li class="flex items-baseline gap-4 py-3 first:pt-0 last:pb-0">
+                <time class="w-10 shrink-0 text-sm opacity-60">
+                  {post.data.pubDate.toLocaleDateString("zh-CN", { day: "numeric" })}
+                </time>
+                <a class="link link-hover text-lg" href={`/blog/${createSlug(post.data.title, post.slug)}`}>
+                  {post.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

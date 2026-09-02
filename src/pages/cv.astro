@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TimeLineElement from "../components/cv/TimeLine.astro";
+---
+
+<BaseLayout title="简历" sideBarActiveItemID="cv">
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">个人简介</div>
+  </div>
+
+  <div class="mb-10 text-justify">
+    这里可以填写个人简介：你的专业方向、擅长领域、工作风格，以及希望参与的项目或合作机会。
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">教育经历</div>
+  </div>
+
+  <div class="time-line-container grid gap-4 mb-10">
+    <TimeLineElement
+      title="学历 / 专业名称"
+      subtitle="[开始年份] 至 [结束年份]，[学校名称]，[城市]，[国家]"
+    />
+    <TimeLineElement
+      title="学历 / 专业名称"
+      subtitle="[开始年份] 至 [结束年份]，[学校名称]，[城市]，[国家]"
+    />
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">工作经历</div>
+  </div>
+
+  <div class="time-line-container mb-10">
+    <TimeLineElement
+      title="职位名称｜项目或公司名称"
+      subtitle="[开始日期] 至 [结束日期]，[公司名称]，[城市]，[国家]"
+    >
+      在此描述职责、重要项目、关键成果和所使用的技术或方法。
+    </TimeLineElement>
+    <TimeLineElement
+      title="职位名称｜项目或公司名称"
+      subtitle="[开始日期] 至 [结束日期]，[公司名称]，[城市]，[国家]"
+    >
+      在此描述职责、重要项目、关键成果和所使用的技术或方法。
+    </TimeLineElement>
+    <TimeLineElement
+      title="职位名称｜项目或公司名称"
+      subtitle="[开始日期] 至 [结束日期]，[公司名称]，[城市]，[国家]"
+    >
+      在此描述职责、重要项目、关键成果和所使用的技术或方法。
+    </TimeLineElement>
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">证书与资质</div>
+  </div>
+
+  <ul class="list-disc mx-6 mb-10 grid gap-2">
+    <li>
+      <a href="#" target="_blank">证书名称（附链接）</a>
+    </li>
+    <li>
+      <a href="#" target="_blank">证书名称（附链接）</a>
+    </li>
+  </ul>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">专业技能</div>
+  </div>
+
+  <ul class="list-disc md:columns-5 columns-2 mx-6">
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>技能名称</li>
+    <li>Skill Name</li>
+  </ul>
+</BaseLayout>

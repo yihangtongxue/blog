@@ -1,0 +1,5 @@
+allowBuilds:
+  esbuild: false
+  sharp: false
+overrides:
+  sitemap: 7.1.1

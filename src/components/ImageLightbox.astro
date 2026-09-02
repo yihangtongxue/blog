@@ -1,0 +1,43 @@
+---
+const { id, navigation = false } = Astro.props;
+---
+
+<dialog id={id} data-image-lightbox class="overflow-visible bg-transparent p-4 max-h-[95vh] max-w-[95vw]">
+  <div class="relative flex items-center justify-center gap-3 sm:gap-5">
+    {navigation && <button data-lightbox-previous class="btn btn-circle shrink-0 focus:outline-none" type="button" aria-label="上一张照片">‹</button>}
+    <div class="relative flex h-[80vh] w-[calc(95vw-8rem)] items-center justify-center sm:w-[76vw]">
+      <img data-lightbox-preview class="max-h-full max-w-full rounded-lg object-contain" alt="" />
+      <button data-lightbox-close class="btn btn-circle h-8 min-h-8 w-8 p-0 absolute right-2 -top-5 z-20 focus:outline-none" type="button" aria-label="关闭图片预览">✕</button>
+    </div>
+    {navigation && <button data-lightbox-next class="btn btn-circle shrink-0 focus:outline-none" type="button" aria-label="下一张照片">›</button>}
+  </div>
+</dialog>
+
+<script>
+  function setupImageLightboxes() {
+    document.querySelectorAll<HTMLDialogElement>("[data-image-lightbox]").forEach((dialog) => {
+      if (dialog.dataset.lightboxInitialized === "true") return;
+      dialog.dataset.lightboxInitialized = "true";
+      dialog.querySelector<HTMLButtonElement>("[data-lightbox-close]")?.addEventListener("click", () => dialog.close());
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+    });
+  }
+
+  setupImageLightboxes();
+  document.addEventListener("astro:page-load", setupImageLightboxes);
+</script>
+
+<style>
+  [data-image-lightbox]::backdrop {
+    background: rgb(0 0 0 / 80%);
+  }
+
+  [data-lightbox-previous]:focus,
+  [data-lightbox-next]:focus,
+  [data-lightbox-close]:focus {
+    outline: none;
+    box-shadow: none;
+  }
+</style>

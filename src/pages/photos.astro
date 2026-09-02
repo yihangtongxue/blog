@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const albums = (await getCollection("photos")).sort((first, second) => second.data.date.valueOf() - first.data.date.valueOf());
+---
+
+<BaseLayout title="照片" sideBarActiveItemID="photos">
+  <div class="mb-5">
+    <h1 class="text-3xl font-bold">照片</h1>
+  </div>
+
+  {
+    albums.length > 0 ? (
+      <div class="grid gap-5 sm:grid-cols-2">
+        {albums.map((album) => (
+          <a class="group relative block aspect-[4/3] overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" href={`/photos/${album.slug}`}>
+            <img class="h-full w-full object-cover transition duration-300 group-hover:scale-105" src={album.data.coverImage} alt={album.data.title} loading="lazy" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-5 pb-5 pt-16 text-white">
+              <h2 class="text-xl font-bold">{album.data.title}</h2>
+              <p class="mt-1 text-sm text-white/80">{album.data.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="bg-base-200 border-l-4 border-secondary p-4">暂时还没有相册。</div>
+    )
+  }
+</BaseLayout>
