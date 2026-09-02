@@ -21,7 +21,6 @@ function lazyLoadMarkdownImages() {
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://astrofy-template.netlify.app',
   image: {
     domains: ['images.unsplash.com'],
   },
