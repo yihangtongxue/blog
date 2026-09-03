@@ -23,7 +23,7 @@ const tags = [...tagCounts.entries()].sort(([first], [second]) => first.localeCo
     tags.length > 0 ? (
       <div class="flex flex-wrap gap-3">
         {tags.map(([tag, count]) => (
-          <a href={`/blog/tag/${encodeURIComponent(tag)}/`} class="btn btn-outline normal-case">
+          <a href={`/articles/tag/${encodeURIComponent(tag)}/`} class="btn btn-outline normal-case">
             {tag}
             <span class="badge badge-neutral">{count}</span>
           </a>

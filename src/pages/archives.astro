@@ -34,7 +34,7 @@ for (const post of posts) {
                 <time class="w-10 shrink-0 text-sm opacity-60">
                   {post.data.pubDate.toLocaleDateString("zh-CN", { day: "numeric" })}
                 </time>
-                <a class="link link-hover text-lg" href={`/blog/${createSlug(post.data.title, post.slug)}`}>
+                <a class="link link-hover text-lg" href={`/articles/${createSlug(post.data.title, post.slug)}`}>
                   {post.data.title}
                 </a>
               </li>
